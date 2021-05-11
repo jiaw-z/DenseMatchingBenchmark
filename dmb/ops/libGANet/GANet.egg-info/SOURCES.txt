@@ -1,0 +1,7 @@
+setup.py
+GANet.egg-info/PKG-INFO
+GANet.egg-info/SOURCES.txt
+GANet.egg-info/dependency_links.txt
+GANet.egg-info/top_level.txt
+src/GANet_cuda.cpp
+src/GANet_kernel.cu
