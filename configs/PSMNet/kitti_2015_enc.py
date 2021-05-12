@@ -12,7 +12,7 @@ model = dict(
     # the model whether or not to use BatchNorm
     batch_norm=True,
     backbone=dict(
-        type="PSMNet",
+        type="PSMNet_enc_sep",
         # the in planes of feature extraction backbone
         in_planes=3,
     ),
@@ -76,7 +76,7 @@ model = dict(
 )
 
 # dataset settings
-dataset_type = 'SceneFlow'
+dataset_type = 'KITTI-2015'
 # data_root = 'datasets/{}/'.format(dataset_type)
 # annfile_root = osp.join(data_root, 'annotations')
 
@@ -89,20 +89,22 @@ annfile_root = osp.join(root, 'StereoMatching/annotations', dataset_type)
 
 # If you don't want to visualize the results, just uncomment the vis data
 # For download and usage in debug, please refer to DATA.md and GETTING_STATED.md respectively.
-# vis_data_root = osp.join(root, 'StereoMatching', dataset_type)
+# vis_data_root = osp.join(root, 'data/visualization_data/', dataset_type)
+# vis_annfile_root = osp.join(vis_data_root, 'annotations')
 vis_data_root = osp.join(root, 'StereoMatching', dataset_type)
 vis_annfile_root = osp.join(root, 'StereoMatching/annotations', dataset_type)
 
+
 img_norm_cfg = dict(mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375])
 data = dict(
-    # whether disparity of datasets is sparse, e.g., SceneFLow is not sparse, but KITTI is sparse
-    sparse=False,
+    # if disparity of datasets is sparse, e.g., SceneFLow is not sparse, but KITTI is sparse
+    sparse=True,
     imgs_per_gpu=3,
     workers_per_gpu=16,
     train=dict(
         type=dataset_type,
         data_root=data_root,
-        annfile=osp.join(annfile_root, 'cleanpass_train.json'),
+        annfile=osp.join(annfile_root, 'full_train.json'),
         input_shape=[256, 512],
         use_right_disp=False,
         **img_norm_cfg,
@@ -110,8 +112,8 @@ data = dict(
     eval=dict(
         type=dataset_type,
         data_root=data_root,
-        annfile=osp.join(annfile_root, 'cleanpass_test.json'),
-        input_shape=[544, 960],
+        annfile=osp.join(annfile_root, 'full_eval.json'),
+        input_shape=[384, 1248],
         use_right_disp=False,
         **img_norm_cfg,
     ),
@@ -120,14 +122,14 @@ data = dict(
         type=dataset_type,
         data_root=vis_data_root,
         annfile=osp.join(vis_annfile_root, 'vis_test.json'),
-        input_shape=[544, 960],
+        input_shape=[384, 1248],
         **img_norm_cfg,
     ),
     test=dict(
         type=dataset_type,
         data_root=data_root,
-        annfile=osp.join(annfile_root, 'cleanpass_test.json'),
-        input_shape=[544, 960],
+        annfile=osp.join(annfile_root, 'split_eval.json'),
+        input_shape=[384, 1248],
         use_right_disp=False,
         **img_norm_cfg,
     ),
@@ -138,17 +140,18 @@ optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 
 lr_config = dict(
     policy='step',
-    warmup='linear',
-    warmup_iters=500,
-    warmup_ratio=1.0 / 3,
-    step=[10]
+    warmup='constant',
+    warmup_iters=100,
+    warmup_ratio=1.0,
+    gamma=0.1,
+    step=[600, 1000]
 )
 checkpoint_config = dict(
-    interval=1
+    interval=25
 )
 
 log_config = dict(
-    interval=10,
+    interval=5,
     hooks=[
         dict(type='TextLoggerHook'),
         dict(type='TensorboardLoggerHook'),
@@ -167,7 +170,9 @@ apex = dict(
     loss_scale=16,
 )
 
-total_epochs = 20
+total_epochs = 1000
+# every n epoch evaluate
+validate_interval = 25
 
 # each model will return several disparity maps, but not all of them need to be evaluated
 # here, by giving indexes, the framework will evaluate the corresponding disparity map
@@ -177,13 +182,16 @@ gpus = 4
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 validate = True
-load_from = None
+load_from = osp.join(root, 'StereoMatching', 'exps/PSMNet/scene_flow/encoder-sep/epoch_16.pth')
 resume_from = None
-workflow = [('train', 1)]
-work_dir = osp.join(root, 'StereoMatching', 'exps/PSMNet/scene_flow')
-# work_dir = './exps/PSMNet/scene_flow'
 
+workflow = [('train', 1)]
+# work_dir = osp.join(root, 'exps/PSMNet/kitti_2015')
+work_dir = osp.join(root, 'StereoMatching', 'exps/PSMNet/kitti_2015')
+
+# seperate encoder
+find_unused_parameters = True
 
 # For test
-checkpoint = osp.join(work_dir, 'epoch_10.pth')
-out_dir = osp.join(work_dir, 'epoch_10')
+checkpoint = osp.join(work_dir, 'epoch_1000.pth')
+out_dir = osp.join(work_dir, 'epoch_1000')

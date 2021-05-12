@@ -10,7 +10,7 @@ model = dict(
     max_disp=max_disp,  # max disparity
     batch_norm=True,  # the model whether or not to use BatchNorm
     backbone=dict(
-        type="PSMNet",
+        type="PSMNet_enc_sep",
         in_planes=3,  # the in planes of feature extraction backbone
     ),
     cost_processor=dict(
@@ -138,6 +138,7 @@ data = dict(
     test=dict(
         type=dataset_type,
         data_root=data_root,
+        # annfile=osp.join(annfile_root, 'full_test.json'),
         annfile=osp.join(annfile_root, 'split_eval.json'),
         input_shape=[384, 1248],
         use_right_disp=False,
@@ -194,6 +195,11 @@ resume_from = None
 workflow = [('train', 1)]
 work_dir = osp.join(root, 'exps/AcfNet/kitti_2015_uniform')
 
+# seperate encoder
+find_unused_parameters = True
+
 # For test
 checkpoint = osp.join(work_dir, 'epoch_600.pth')
 out_dir = osp.join(work_dir, 'epoch_600')
+# checkpoint = '/data1/StereoMatching/exps/pretrained/AcfNet-SceneFlow-Uniform.pth'
+# out_dir = osp.join(work_dir, 'test_sceneflow_pretrained')

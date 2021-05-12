@@ -10,7 +10,7 @@ model = dict(
     max_disp=max_disp,  # max disparity
     batch_norm=True,  # the model whether or not to use BatchNorm
     backbone=dict(
-        type="PSMNet",
+        type="PSMNet_enc_sep",
         in_planes=3,  # the in planes of feature extraction backbone
     ),
     cost_processor=dict(
@@ -29,7 +29,7 @@ model = dict(
         cost_aggregator=dict(
             type="AcfNet",
             # the maximum disparity of disparity search range
-            max_disp=max_disp,
+            max_disp = max_disp,
             # the in planes of cost aggregation sub network
             in_planes=64,
         ),
@@ -88,13 +88,14 @@ model = dict(
 )
 
 # dataset settings
-dataset_type = 'KITTI-2015'
+dataset_type = 'SceneFlow'
 # data_root = 'datasets/{}/'.format(dataset_type)
 # annfile_root = osp.join(data_root, 'annotations')
 
 # root = '/home/youmin/'
 # root = '/node01/jobs/io/out/youmin/'
 root = '/data1/'
+
 
 data_root = osp.join(root, 'StereoMatching', dataset_type)
 annfile_root = osp.join(root, 'StereoMatching/annotations', dataset_type)
@@ -107,14 +108,14 @@ vis_annfile_root = osp.join(root, 'StereoMatching/annotations', dataset_type)
 
 img_norm_cfg = dict(mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375])
 data = dict(
-    # if disparity of datasets is sparse, e.g., SceneFLow is not sparse, but KITTI is sparse
-    sparse=True,
+    # whether disparity of datasets is sparse, e.g., SceneFLow is not sparse, but KITTI is sparse
+    sparse=False,
     imgs_per_gpu=2,
     workers_per_gpu=16,
     train=dict(
         type=dataset_type,
         data_root=data_root,
-        annfile=osp.join(annfile_root, 'full_train.json'),
+        annfile=osp.join(annfile_root, 'cleanpass_train.json'),
         input_shape=[256, 512],
         use_right_disp=False,
         **img_norm_cfg,
@@ -122,8 +123,8 @@ data = dict(
     eval=dict(
         type=dataset_type,
         data_root=data_root,
-        annfile=osp.join(annfile_root, 'full_eval.json'),
-        input_shape=[384, 1248],
+        annfile=osp.join(annfile_root, 'cleanpass_test.json'),
+        input_shape=[544, 960],
         use_right_disp=False,
         **img_norm_cfg,
     ),
@@ -132,14 +133,14 @@ data = dict(
         type=dataset_type,
         data_root=vis_data_root,
         annfile=osp.join(vis_annfile_root, 'vis_test.json'),
-        input_shape=[384, 1248],
+        input_shape=[544, 960],
         **img_norm_cfg,
     ),
     test=dict(
         type=dataset_type,
         data_root=data_root,
-        annfile=osp.join(annfile_root, 'split_eval.json'),
-        input_shape=[384, 1248],
+        annfile=osp.join(annfile_root, 'cleanpass_test.json'),
+        input_shape=[544, 960],
         use_right_disp=False,
         **img_norm_cfg,
     ),
@@ -150,50 +151,49 @@ optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 
 lr_config = dict(
     policy='step',
-    warmup='constant',
-    warmup_iters=100,
-    warmup_ratio=1.0,
-    gamma=1/3,
-    step=[100, 300, 600]
+    warmup='linear',
+    warmup_iters=500,
+    warmup_ratio=1.0 / 3,
+    step=[20]
 )
-checkpoint_config = dict(
-    interval=25
-)
+checkpoint_config = dict(interval=1)
 
 log_config = dict(
-    interval=5,
+    interval=10,
     hooks=[
         dict(type='TextLoggerHook'),
         dict(type='TensorboardLoggerHook'),
-    ]
+    ])
+
+apex = dict(  # https://nvidia.github.io/apex/amp.html
+    synced_bn=True,  # whether to use apex.synced_bn
+    use_mixed_precision=False,  # whether to use apex for mixed precision training
+    type="float16",  # the model weight type: float16 or float32
+    loss_scale=16,  # the factor when apex scales the loss value
 )
 
-# https://nvidia.github.io/apex/amp.html
-apex = dict(
-    # whether to use apex.synced_bn
-    synced_bn=True,
-    # whether to use apex for mixed precision training
-    use_mixed_precision=False,
-    # the model weight type: float16 or float32
-    type="float16",
-    # the factor when apex scales the loss value
-    loss_scale=16,
-)
+total_epochs = 20
 
-total_epochs = 600
-# every n epoch evaluate
-validate_interval = 25
+# each model will return several disparity maps, but not all of them need to be evaluated
+# here, by giving indexes, the framework will evaluate the corresponding disparity map
+eval_disparity_id = [0, 1, 2]
 
 gpus = 4
 dist_params = dict(backend='nccl')
+
 log_level = 'INFO'
 validate = True
-load_from = osp.join(root, 'exps/AcfNet/scene_flow_uniform/epoch_19.pth')
+load_from = None
 resume_from = None
-
 workflow = [('train', 1)]
-work_dir = osp.join(root, 'exps/AcfNet/kitti_2015_uniform')
+# work_dir = osp.join(root, 'exps/AcfNet/scene_flow_uniform')
+work_dir = osp.join(root, 'StereoMatching', 'exps/AcfNet/scene_flow_uniform_enc')
+
+# seperate encoder
+find_unused_parameters = True
 
 # For test
-checkpoint = osp.join(work_dir, 'epoch_600.pth')
-out_dir = osp.join(work_dir, 'epoch_600')
+# checkpoint = osp.join(work_dir, 'epoch_10.pth')
+checkpoint = '/data1/StereoMatching/exps/pretrained/AcfNet-SceneFlow-Uniform.pth'
+# out_dir = osp.join(work_dir, 'epoch_10')
+out_dir = osp.join(work_dir, 'test_pretrained')

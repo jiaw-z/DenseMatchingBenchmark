@@ -93,15 +93,17 @@ dataset_type = 'SceneFlow'
 # annfile_root = osp.join(data_root, 'annotations')
 
 # root = '/home/youmin/'
-root = '/node01/jobs/io/out/youmin/'
+# root = '/node01/jobs/io/out/youmin/'
+root = '/data1/'
 
-data_root = osp.join(root, 'data/StereoMatching/', dataset_type)
-annfile_root = osp.join(root, 'data/annotations/', dataset_type)
+
+data_root = osp.join(root, 'StereoMatching', dataset_type)
+annfile_root = osp.join(root, 'StereoMatching/annotations', dataset_type)
 
 # If you don't want to visualize the results, just uncomment the vis data
 # For download and usage in debug, please refer to DATA.md and GETTING_STATED.md respectively.
-vis_data_root = osp.join(root, 'data/visualization_data/', dataset_type)
-vis_annfile_root = osp.join(vis_data_root, 'annotations')
+vis_data_root = osp.join(root, 'StereoMatching', dataset_type)
+vis_annfile_root = osp.join(root, 'StereoMatching/annotations', dataset_type)
 
 
 img_norm_cfg = dict(mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375])
@@ -184,7 +186,8 @@ validate = True
 load_from = None
 resume_from = None
 workflow = [('train', 1)]
-work_dir = osp.join(root, 'exps/AcfNet/scene_flow_uniform')
+# work_dir = osp.join(root, 'exps/AcfNet/scene_flow_uniform')
+work_dir = osp.join(root, 'StereoMatching', 'exps/AcfNet/scene_flow_uniform')
 
 # For test
 checkpoint = osp.join(work_dir, 'epoch_10.pth')

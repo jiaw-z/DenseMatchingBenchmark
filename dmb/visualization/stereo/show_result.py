@@ -52,15 +52,16 @@ class ShowDisp(object):
 
             group = self.vis_group_color(self.estDisp[0], self.gtDisp, self.leftImage, self.rightImage)
             estDispColor = self.vis_per_disp(self.estDisp, self.max_disp)
-            _, estDispColor_lowres = self.get_gray_and_color_disp(self.DisparityLowres, self.max_disp//4)
-            # fea_res = self.vis_feature_err(self.Leftfeats, self.FeatsR2L, self.MaskL)
-            disp_err = self.vis_disp_error(self.estDisp[0], self.gtDisp)
-            fea_cos = self.vis_cosine_map(self.Cosine, self.MaskL)
-            feature = self.vis_features(self.Leftfeats, self.Rightfeats, self.FeatsR2L, fea_cos, disp_err)
             process_result.update(Disparity=estDispColor)
             process_result.update(GroupColor=group)
-            process_result.update(Feature=feature)
-            process_result.update(DisparityLowres=estDispColor_lowres)
+            if self.DisparityLowres is not None:
+                _, estDispColor_lowres = self.get_gray_and_color_disp(self.DisparityLowres, self.max_disp//4)
+                process_result.update(DisparityLowres=estDispColor_lowres)
+            if self.Cosine is not None:
+                disp_err = self.vis_disp_error(self.estDisp[0], self.gtDisp)
+                fea_cos = self.vis_cosine_map(self.Cosine, self.MaskL)
+                feature = self.vis_features(self.Leftfeats, self.Rightfeats, self.FeatsR2L, fea_cos, disp_err)
+                process_result.update(Feature=feature)
 
         if self.gtDisp is not None:
             gtDispColor = self.vis_per_disp(self.gtDisp, self.max_disp)
