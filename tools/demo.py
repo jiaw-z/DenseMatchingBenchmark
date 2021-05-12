@@ -111,7 +111,11 @@ if __name__ == '__main__':
     imageNames = os.listdir(os.path.join(data_root, 'images/left/'))
     imageNames = [name for name in imageNames if is_image_file(name)]
     imageNames.sort()
+<<<<<<< HEAD
     assert len(imageNames) >= 1, "No images found in {}".format(os.path.join(data_root, 'images/left/'))
+=======
+    assert len(imageNames) > 1, "No images found in {}".format(os.path.join(data_root, 'images/left/'))
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
     batchesDict = []
     disparity_suffix = None
     if os.path.isdir(os.path.join(data_root, 'disparity/left')):
@@ -177,6 +181,7 @@ if __name__ == '__main__':
     )
     print("Inference Done!")
 
+<<<<<<< HEAD
     # print("Start Visualization ... ")
     # for batch in batchesDict:
     #     pkl_path = os.path.join(log_dir, batch['left_image_path'].split('/')[-1].split('.')[0], 'result.pkl')
@@ -185,6 +190,16 @@ if __name__ == '__main__':
     #     visualize_disp(result_pkl)
     #
     # print("Done!")
+=======
+    print("Start Visualization ... ")
+    for batch in batchesDict:
+        pkl_path = os.path.join(log_dir, batch['left_image_path'].split('/')[-1].split('.')[0], 'result.pkl')
+        print("Visualize ", pkl_path)
+        result_pkl = mmcv.load(pkl_path)
+        visualize_disp(result_pkl)
+
+    print("Done!")
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
 
 

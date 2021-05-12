@@ -51,6 +51,10 @@ def parse_args():
 
 def main():
     args = parse_args()
+<<<<<<< HEAD
+=======
+
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
     cfg = Config.fromfile(args.config)
     # set cudnn_benchmark
     if cfg.get('cudnn_benchmark', False):

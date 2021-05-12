@@ -63,10 +63,17 @@ class TensorboardLoggerHook(LoggerHook):
             self.writer.add_text(tag, record, global_step)
             return
 
+<<<<<<< HEAD
         # if record.size > 1:
         #     self.writer.add_image(tag, record, global_step)
         # else:
         #     self.writer.add_scalar(tag, record, global_step)
+=======
+        if record.size > 1:
+            self.writer.add_image(tag, record, global_step)
+        else:
+            self.writer.add_scalar(tag, record, global_step)
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
     @master_only
     def log(self, runner):

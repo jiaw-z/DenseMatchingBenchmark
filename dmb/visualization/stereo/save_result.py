@@ -35,6 +35,7 @@ class SaveResultTool(object):
             conf_save_path = os.path.join(out_dir, 'confidence')
             mkdir_or_exist(conf_save_path)
             plt.imsave(osp.join(conf_save_path, image_name), result['ColorConfidence'])
+<<<<<<< HEAD
 
         if 'Feature' in result.keys():
             conf_save_path = os.path.join(out_dir, 'feature')
@@ -46,3 +47,5 @@ class SaveResultTool(object):
             color_save_path = osp.join(out_dir, 'DisparityLowres')
             mkdir_or_exist(color_save_path)
             plt.imsave(osp.join(color_save_path, image_name), colorEstDisp_lr, cmap=plt.cm.hot)
+=======
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af

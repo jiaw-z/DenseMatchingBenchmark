@@ -62,7 +62,10 @@ def set_random_seed(seed):
 
 def get_root_logger(save_dir, log_level=logging.INFO, filename="log.txt"):
     logger = logging.getLogger()
+<<<<<<< HEAD
     # print(logger.hasHandlers())
+=======
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
     if not logger.hasHandlers():
         logging.basicConfig(
             format='%(asctime)s - %(levelname)s - %(message)s',
@@ -70,18 +73,26 @@ def get_root_logger(save_dir, log_level=logging.INFO, filename="log.txt"):
     rank, _ = get_dist_info()
     if rank != 0:
         logger.setLevel('ERROR')
+<<<<<<< HEAD
     else:
         logger.setLevel('INFO')
     if save_dir:
         # fh = logging.FileHandler(os.path.join(save_dir, filename))
         fh = logging.FileHandler(filename)
+=======
+    if save_dir:
+        fh = logging.FileHandler(os.path.join(save_dir, filename))
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
         fh.setLevel(log_level)
         formatter = logging.Formatter("%(asctime)s - %(levelname)s: %(message)s")
         fh.setFormatter(formatter)
         logger.addHandler(fh)
         if rank != 0:
             fh.setLevel('ERROR')
+<<<<<<< HEAD
         else:
             logger.setLevel('INFO')
+=======
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
     return logger

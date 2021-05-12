@@ -127,6 +127,7 @@ class PSMNetBackbone(nn.Module):
         r_fms = self._forward(r_img)
 
         return l_fms, r_fms
+<<<<<<< HEAD
 
 
 
@@ -298,3 +299,5 @@ class PSMNetBackbone_enc_sep(nn.Module):
 
 
 
+=======
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af

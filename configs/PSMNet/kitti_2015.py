@@ -81,6 +81,7 @@ dataset_type = 'KITTI-2015'
 # annfile_root = osp.join(data_root, 'annotations')
 
 # root = '/home/youmin/'
+<<<<<<< HEAD
 # root = '/node01/jobs/io/out/youmin/'
 root = '/data1/'
 
@@ -93,6 +94,17 @@ annfile_root = osp.join(root, 'StereoMatching/annotations', dataset_type)
 # vis_annfile_root = osp.join(vis_data_root, 'annotations')
 vis_data_root = osp.join(root, 'StereoMatching', dataset_type)
 vis_annfile_root = osp.join(root, 'StereoMatching/annotations', dataset_type)
+=======
+root = '/node01/jobs/io/out/youmin/'
+
+data_root = osp.join(root, 'data/StereoMatching/', dataset_type)
+annfile_root = osp.join(root, 'data/annotations/', dataset_type)
+
+# If you don't want to visualize the results, just uncomment the vis data
+# For download and usage in debug, please refer to DATA.md and GETTING_STATED.md respectively.
+vis_data_root = osp.join(root, 'data/visualization_data/', dataset_type)
+vis_annfile_root = osp.join(vis_data_root, 'annotations')
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
 
 img_norm_cfg = dict(mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375])
@@ -104,7 +116,11 @@ data = dict(
     train=dict(
         type=dataset_type,
         data_root=data_root,
+<<<<<<< HEAD
         annfile=osp.join(annfile_root, 'split_train.json'),
+=======
+        annfile=osp.join(annfile_root, 'full_train.json'),
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
         input_shape=[256, 512],
         use_right_disp=False,
         **img_norm_cfg,
@@ -112,7 +128,11 @@ data = dict(
     eval=dict(
         type=dataset_type,
         data_root=data_root,
+<<<<<<< HEAD
         annfile=osp.join(annfile_root, 'split_eval.json'),
+=======
+        annfile=osp.join(annfile_root, 'full_eval.json'),
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
         input_shape=[384, 1248],
         use_right_disp=False,
         **img_norm_cfg,
@@ -128,7 +148,11 @@ data = dict(
     test=dict(
         type=dataset_type,
         data_root=data_root,
+<<<<<<< HEAD
         annfile=osp.join(annfile_root, 'split_eval.json'),
+=======
+        annfile=osp.join(annfile_root, 'full_test.json'),
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
         input_shape=[384, 1248],
         use_right_disp=False,
         **img_norm_cfg,
@@ -182,12 +206,21 @@ gpus = 4
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 validate = True
+<<<<<<< HEAD
 load_from = osp.join(root, 'StereoMatching', 'exps/PSMNet/scene_flow/epoch_10.pth')
 resume_from = None
 
 workflow = [('train', 1)]
 # work_dir = osp.join(root, 'exps/PSMNet/kitti_2015')
 work_dir = osp.join(root, 'StereoMatching', 'exps/PSMNet/kitti_2015')
+=======
+load_from = osp.join(root, 'exps/PSMNet/scene_flow/epoch_10.pth')
+resume_from = None
+
+workflow = [('train', 1)]
+work_dir = osp.join(root, 'exps/PSMNet/kitti_2015')
+
+>>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 # For test
 checkpoint = osp.join(work_dir, 'epoch_1000.pth')
 out_dir = osp.join(work_dir, 'epoch_1000')
