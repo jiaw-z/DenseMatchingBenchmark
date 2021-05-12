@@ -5,7 +5,6 @@ NGPUS=$1
 CFG_PATH=$2
 PORT=$3
 
-<<<<<<< HEAD
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --master_port $PORT --nproc_per_node=$NGPUS \
         train.py $CFG_PATH --launcher pytorch --validate --gpus $NGPUS
 
@@ -40,7 +39,3 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6 python -m torch.distributed.launch --master_p
         tools/train.py ./configs/PSMNet/kitti_2015_enc.py --launcher pytorch --validate --gpus 7 \
         --work_dir /data1/StereoMatching/exps/PSMNet/kitti_2015/vis-test
 
-=======
-CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --master_port $PORT --nproc_per_node=$NGPUS \
-        train.py $CFG_PATH --launcher pytorch --validate --gpus $NGPUS
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
