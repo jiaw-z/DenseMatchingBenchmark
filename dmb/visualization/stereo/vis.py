@@ -190,7 +190,6 @@ def disp_err_to_color(disp_est, disp_gt):
 
     return err_im
 
-<<<<<<< HEAD
 def fea_err_to_color(fea1, fea2):
     # error color map with interval (0, 0.1875, 0.375, 0.75, 1.5, 3, 6, 12, 24, 48, inf)/3.0
     # different interval corresponds to different 3-channel projection
@@ -227,8 +226,6 @@ def fea_err_to_color(fea1, fea2):
 
     return err_im
 
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
 def group_color(est_disp, gt_disp=None, left_image=None, right_image=None, save_path=None):
     """

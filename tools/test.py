@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 import warnings
 warnings.filterwarnings("ignore")
 
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 import argparse
 import os
 import os.path as osp
@@ -32,11 +29,8 @@ from dmb.data.datasets import build_dataset
 from dmb.data.datasets.evaluation import output_evaluation_in_pandas
 from dmb.visualization.stereo import sparsification_plot
 from dmb.visualization import SaveResultTool
-<<<<<<< HEAD
 from sklearn.decomposition import PCA
 import torch.nn.functional as F
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
 
 def sparsification_eval(result, cfg, id=0):
@@ -57,7 +51,6 @@ def sparsification_eval(result, cfg, id=0):
 
             return error_dict
 
-<<<<<<< HEAD
 def pca_feat(feat, K=1, solver="auto", whiten=True, norm=True):
     if isinstance(feat, torch.Tensor):
         feat = feat.cpu()
@@ -118,26 +111,20 @@ def padding(x, padding_size):
     )
     return x
 
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
 def disp_(cfg, ori_result, data):
     from dmb.data.datasets.evaluation.stereo.eval import remove_padding
     from dmb.data.datasets.evaluation.stereo.eval_hooks import disp_evaluation
 
     disps = ori_result['disps']
-<<<<<<< HEAD
     padding_size = disps[0].size()[-2:]
     disps_ini = padding(data['leftDisp'].clone().cpu(), padding_size)
     disps_lowr = F.interpolate(disps_ini, scale_factor=1 / 4) / 4.0
     maskl = (disps_lowr > 0.0).float().squeeze()
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
     # remove the padding when data augmentation
     ori_size = data['original_size']
     disps = remove_padding(disps, ori_size)
 
-<<<<<<< HEAD
     # shape : [1, c, h, w]
     ref_fms = ori_result['ref_fms'].cpu()
     tgt_fms = ori_result['tgt_fms'].cpu()
@@ -161,8 +148,6 @@ def disp_(cfg, ori_result, data):
     feat_r2l = warp(tgt_fms.unsqueeze(0), -disps_lowr).squeeze()
     feat_r2l *= maskl
 
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
     # evaluation
     whole_error_dict, data = disp_evaluation(cfg.copy(), disps, data)
 
@@ -170,15 +155,12 @@ def disp_(cfg, ori_result, data):
         'Disparity': disps,
         'GroundTruth': data['leftDisp'],
         'Error': whole_error_dict,
-<<<<<<< HEAD
         'Leftfeats':ref_fms,
         'Rightfeats':tgt_fms,
         'DisparityLowres': disps_lowr,
         'FeatsR2L': feat_r2l,
         'MaskL': maskl,
         'Cosine': cosine,
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
     }
 
     if hasattr(cfg.model, 'cmn'):

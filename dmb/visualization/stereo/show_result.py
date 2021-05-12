@@ -5,19 +5,13 @@ from mmcv import mkdir_or_exist
 import numpy as np
 
 import torch
-<<<<<<< HEAD
 import torch.nn.functional as F
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
 from dmb.visualization.stereo.vis import disp_to_color
 from dmb.visualization.stereo.vis import tensor_to_color
 from dmb.visualization.stereo.vis import group_color
-<<<<<<< HEAD
 from dmb.visualization.stereo.vis import disp_err_to_color
 from dmb.visualization.stereo.vis import fea_err_to_color
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
 
 # Attention: in this framework, we always set the first result, e.g., disparity map, as the best.
@@ -55,15 +49,10 @@ class ShowDisp(object):
                 grayDisp, colorDisp = self.get_gray_and_color_disp(firstDisp, self.max_disp)
                 process_result.update(GrayDisparity=grayDisp)
                 process_result.update(ColorDisparity=colorDisp)
-<<<<<<< HEAD
-
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
             group = self.vis_group_color(self.estDisp[0], self.gtDisp, self.leftImage, self.rightImage)
             estDispColor = self.vis_per_disp(self.estDisp, self.max_disp)
             process_result.update(Disparity=estDispColor)
             process_result.update(GroupColor=group)
-<<<<<<< HEAD
             if self.DisparityLowres is not None:
                 _, estDispColor_lowres = self.get_gray_and_color_disp(self.DisparityLowres, self.max_disp//4)
                 process_result.update(DisparityLowres=estDispColor_lowres)
@@ -72,8 +61,6 @@ class ShowDisp(object):
                 fea_cos = self.vis_cosine_map(self.Cosine, self.MaskL)
                 feature = self.vis_features(self.Leftfeats, self.Rightfeats, self.FeatsR2L, fea_cos, disp_err)
                 process_result.update(Feature=feature)
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
         if self.gtDisp is not None:
             gtDispColor = self.vis_per_disp(self.gtDisp, self.max_disp)
@@ -86,10 +73,6 @@ class ShowDisp(object):
             self.gtDisp = self.result['GroundTruth']
             assert isinstance(self.gtDisp, torch.Tensor)
             self.max_disp = self.result['GroundTruth'].detach().cpu().numpy().max()
-<<<<<<< HEAD
-=======
-
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
         else:
             self.max_disp = None
             self.gtDisp = None
@@ -111,7 +94,6 @@ class ShowDisp(object):
         else:
             self.rightImage = None
 
-<<<<<<< HEAD
         if 'Leftfeats' in self.result.keys():
             self.Leftfeats = self.result['Leftfeats']
         else:
@@ -142,8 +124,6 @@ class ShowDisp(object):
             self.Cosine = None
 
 
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
     def getFirstItem(self, item):
         if isinstance(item, container_abcs.Sequence):
             return item[0]
@@ -217,7 +197,6 @@ class ShowDisp(object):
 
         return group_color(estDisp, gtDisp, leftImage, rightImage, save_path)
 
-<<<<<<< HEAD
     def vis_features(self, Leftfeats, Rightfeats, FeatsR2L=None, cosine=None, disp_err=None):
         c, h, w = Leftfeats.shape
         Leftfeats = Leftfeats.permute(1, 2, 0).clone().detach().cpu().numpy() / 255.0
@@ -290,8 +269,6 @@ class ShowDisp(object):
 
 
 
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
 
 class ShowConf(object):
     """

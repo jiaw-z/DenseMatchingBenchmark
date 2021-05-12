@@ -65,6 +65,8 @@ e. Install DenseMatchingBenchmark(other dependencies will be installed optionall
 
 bash INSTALL.sh $1 $2
 
+bash INSTALL.sh dcn
+
 # recommend install instruction:
 
 bash INSTALL.sh all

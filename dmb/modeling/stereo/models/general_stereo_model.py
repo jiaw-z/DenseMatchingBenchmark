@@ -80,11 +80,8 @@ class GeneralizedStereoModel(nn.Module):
         else:
 
             results = dict(
-<<<<<<< HEAD
                 ref_fms=ref_fms,
                 tgt_fms=tgt_fms,
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af
                 disps=disps,
                 costs=costs,
             )
