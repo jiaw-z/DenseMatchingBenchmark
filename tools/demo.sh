@@ -10,11 +10,11 @@ python tools/demo.py \
     --disp-div-factor 1.0
 
 
-python tools/demo.py \
+CUDA_VISIBLE_DEVICES=7 python tools/demo.py \
     --config-path ./configs/PSMNet/scene_flow_enc.py \
     --checkpoint-path /data1/StereoMatching/exps/PSMNet/scene_flow/epoch_16_enc.pth \
     --data-root tools/demo_data/ \
-    --device cuda:7 \
+    --device cuda:0 \
     --log-dir /data1/StereoMatching/exps/PSMNet/scene_flow/output_sf_enc_16 \
     --pad-to-shape 544 960 \
     --scale-factor 1.0 \
