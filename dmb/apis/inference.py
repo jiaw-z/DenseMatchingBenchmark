@@ -197,18 +197,34 @@ def _inference_single(model, batchDict, img_transform, device):
 
     assert isinstance(result, dict)
 
+    # ref_fms = net_result['ref_fms'][0]
+    # tgt_fms = net_result['tgt_fms'][0]
+    # n, c, h ,w  = ref_fms.shape
+
+    # # cosine
+    # ref = ref_fms.reshape(n, c, h*w, 1)
+    # tgt = tgt_fms.reshape(n, c, 1, h*w)
+    # cosine = F.cosine_similarity(ref, tgt, dim=1).squeeze()
+    # cosine = (cosine + 1 ) / 2
+    # cosine = cosine.reshape(h, w, h*w)
+    # cos_std = torch.std(cosine, -1)
+    # print(cos_std.shape)
+
     for k, v in result.items():
         assert isinstance(v, (tuple, list))
-        for i in range(len(v)):
-            vv = v[i]
-            if torch.is_tensor(vv):
-                # inverse up/down sample
-                vv = F.interpolate(vv*1.0/cfg.scale_factor, scale_factor=1.0/cfg.scale_factor, mode='bilinear', align_corners=False)
-                ori_size = procData['original_size']
-                if cfg.pad_to_shape is not None:
-                    vv = remove_padding(vv, ori_size)
-                v[i] = vv
+        if k != 'ref_fms' and k!= 'tgt_fms':
+            for i in range(len(v)):
+                vv = v[i]
+                if torch.is_tensor(vv):
+                    # inverse up/down sample
+                    vv = F.interpolate(vv*1.0/cfg.scale_factor, scale_factor=1.0/cfg.scale_factor, mode='bilinear', align_corners=False)
+                    ori_size = procData['original_size']
+                    if cfg.pad_to_shape is not None:
+                        vv = remove_padding(vv, ori_size)
+                    v[i] = vv
         result[k] = v
+
+
 
     logData = {
         'Result': result,

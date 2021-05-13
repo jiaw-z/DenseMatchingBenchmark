@@ -11,9 +11,9 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --master_port $P
 <<<<<<< HEAD
 
 # sceneflow-test
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6 python -m torch.distributed.launch --master_port 1234 --nproc_per_node=7 \
-        tools/test.py ./configs/PSMNet/scene_flow.py --launcher pytorch --validate --gpus 7 --show True \
-        --checkpoint /data1/StereoMatching/exps/PSMNet/scene_flow/epoch_10_8gpus.pth
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --master_port 1234 --nproc_per_node=7 \
+        tools/test.py ./configs/PSMNet/scene_flow.py --launcher pytorch --validate --gpus 8 --show True \
+        --checkpoint /data1/StereoMatching/exps/PSMNet/scene_flow/epoch_10.pth
 
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6 python -m torch.distributed.launch --master_port 1234 --nproc_per_node=7 \
         tools/test.py ./configs/PSMNet/scene_flow_enc.py --launcher pytorch --validate --gpus 7 --show True \
@@ -33,9 +33,9 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6 python -m torch.distributed.launch --master_p
         --checkpoint /data1/StereoMatching/exps/PSMNet/scene_flow/epoch_10_4gpus.pth \
         --out_dir /data1/StereoMatching/exps/PSMNet/kitti_2015/epoch_10_sceneflow
 
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6 python -m torch.distributed.launch --master_port 1234 --nproc_per_node=7 \
-        tools/test.py ./configs/PSMNet/kitti_2015.py --launcher pytorch --validate --gpus 7 --show True \
-        --checkpoint /data1/StereoMatching/exps/PSMNet/scene_flow/epoch_10_8gpus.pth \
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --master_port 1234 --nproc_per_node=8 \
+        tools/test.py ./configs/PSMNet/kitti_2015.py --launcher pytorch --validate --gpus 8 --show True \
+        --checkpoint /data1/StereoMatching/exps/PSMNet/scene_flow/epoch_10.pth \
         --out_dir /data1/StereoMatching/exps/PSMNet/kitti_2015/epoch_10_8gpus_sceneflow
 
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6 python -m torch.distributed.launch --master_port 1234 --nproc_per_node=7 \

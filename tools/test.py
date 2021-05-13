@@ -126,8 +126,8 @@ def disp_(cfg, ori_result, data):
     disps = remove_padding(disps, ori_size)
 
     # shape : [1, c, h, w]
-    ref_fms = ori_result['ref_fms'].cpu()
-    tgt_fms = ori_result['tgt_fms'].cpu()
+    ref_fms = ori_result['ref_fms'][0].cpu()
+    tgt_fms = ori_result['tgt_fms'][0].cpu()
 
     # cosine similarity
     feat_r2l = warp(tgt_fms, -disps_lowr)
