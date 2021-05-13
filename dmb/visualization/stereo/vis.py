@@ -1,6 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+import torch
+import torch.nn.functional as F
+
+from sklearn.decomposition import PCA
+
 
 def disp_map(disp):
     """
@@ -273,3 +278,65 @@ def group_color(est_disp, gt_disp=None, left_image=None, right_image=None, save_
         plt.imsave(save_path, group_image, cmap=plt.cm.hot)
 
     return group_image
+
+
+def warp(img, disp):
+    '''
+    Borrowed from: https://github.com/OniroAI/MonoDepth-PyTorch
+    '''
+    b, _, h, w = img.size()
+    # device = disp.device
+    # Original coordinates of pixels
+    x_base = torch.linspace(0, 1, w).repeat(b, h, 1).type_as(img)
+    y_base = torch.linspace(0, 1, h).repeat(b, w, 1).transpose(1, 2).type_as(img)
+
+    # Apply shift in X direction
+    x_shifts = disp[:, 0, :, :] / w
+    flow_field = torch.stack((x_base + x_shifts, y_base), dim=3)
+
+    # In grid_sample coordinates are assumed to be between -1 and 1
+    output = F.grid_sample(img, 2 * flow_field - 1, mode='bilinear', padding_mode='border')
+
+    return output
+
+def padding(x, padding_size):
+    from torch.nn.functional import pad
+    # PADDING
+    h, w = x.shape[-2:]
+    th, tw = padding_size
+    pad_left = 0
+    pad_right = tw - w
+    pad_top = th - h
+    pad_bottom = 0
+    x = pad(
+        x, [pad_left, pad_right, pad_top, pad_bottom],
+        mode='constant', value=0
+    )
+    return x
+
+
+def pca_feat(feat, K=1, solver="auto", whiten=True, norm=True):
+    if isinstance(feat, torch.Tensor):
+        feat = feat.cpu()
+
+    N, C, H, W = feat.shape
+    pca = PCA(
+        n_components=3 * K,
+        svd_solver=solver,
+        whiten=whiten,
+    )
+
+    feat = feat.permute(0, 2, 3, 1)
+    feat = feat.reshape(-1, C).numpy()
+
+    pca_feat = pca.fit_transform(feat)
+    pca_feat = torch.Tensor(pca_feat).view(N, H, W, K * 3)
+    pca_feat = pca_feat.permute(0, 3, 1, 2)
+
+    pca_feat = [pca_feat[:, k : k + 3] for k in range(0, pca_feat.shape[1], 3)]
+    if norm:
+        pca_feat = [(x - x.min()) / (x.max() - x.min()) for x in pca_feat]
+        # rescale to [0-255] for visulization
+        pca_feat = [x * 255.0 for x in pca_feat]
+
+    return pca_feat[0] if K == 1 else pca_feat

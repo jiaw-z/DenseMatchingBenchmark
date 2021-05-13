@@ -8,10 +8,9 @@ SHOW=$4
 
 CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --master_port $PORT --nproc_per_node=$NGPUS \
         test.py $CFG_PATH --launcher pytorch --validate --gpus $NGPUS --show $SHOW
-<<<<<<< HEAD
 
 # sceneflow-test
-CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --master_port 1234 --nproc_per_node=7 \
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --master_port 1234 --nproc_per_node=8 \
         tools/test.py ./configs/PSMNet/scene_flow.py --launcher pytorch --validate --gpus 8 --show True \
         --checkpoint /data1/StereoMatching/exps/PSMNet/scene_flow/epoch_10.pth
 
@@ -48,5 +47,3 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6 python -m torch.distributed.launch --master_p
         tools/test.py ./configs/AcfNet/kitti_2015_uniform.py --launcher pytorch --validate --gpus 7 --show True \
         --checkpoint /data1/StereoMatching/exps/pretrained/AcfNet-SceneFlow-Uniform.pth \
         --out_dir /data1/StereoMatching/exps/AcfNet/scene_flow_uniform/valid_sceneflow_pretrained
-=======
->>>>>>> 177c56ca1952f54d28e6073afa2c16981113a2af

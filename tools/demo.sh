@@ -1,5 +1,5 @@
 #!/bin/bash
-python tools/demo.py \
+CUDA_VISIBLE_DEVICES=7 python tools/demo.py \
     --config-path ./configs/PSMNet/kitti_2015.py \
     --checkpoint-path /data1/StereoMatching/exps/PSMNet/scene_flow/epoch_10.pth \
     --data-root tools/demo_data_kitti/ \
